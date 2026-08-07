@@ -1,0 +1,6 @@
+## Runtime config template - copied to the build dir as fm2.toml.
+game_data_root = "G:/Games/Forza Motorsport 2/recomp/extracted"
+log_file = "fm2.log"
+gpu_plugin = "xenos"
+gpu_allow_invalid_fetch_constants = true
+allow_game_relative_writes = true

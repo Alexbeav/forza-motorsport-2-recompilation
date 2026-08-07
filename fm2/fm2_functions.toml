@@ -1,0 +1,19 @@
+# Manually-specified function boundaries for Forza Motorsport 2 (Europe), Title ID 4D5307EA
+
+[functions]
+0x823F70A0 = { size = 0x8 }  # auto: codegen unresolved target
+0x823F7A48 = { size = 0x4 }  # auto: codegen unresolved target
+0x8266A6D0 = { size = 0x100 }  # auto: prologue-scan parent of label 0x8266A7BC
+0x827CBAB0 = { size = 0x18 }  # auto: codegen unresolved target
+0x82756380 = { size = 0x210 }  # auto: prologue-scan parent of label 0x82756590  # fn-boundary-end
+0x8276BED0 = { size = 0x4B8 }  # auto: prologue-scan parent of 0x8276C388  # fn-boundary-end
+0x8279FA68 = { size = 0x4AC }  # auto: prologue-scan parent of 0x8279FF14  # fn-boundary-end
+0x827A6B70 = { size = 0x4C4 }  # auto: prologue-scan parent of 0x827A7034  # fn-boundary-end
+0x82756590 = { size = 0x244 }  # auto: split from container 0x82756380 (codegen-unresolved)
+0x8276C388 = { size = 0x20 }  # auto: split from container 0x8276BED0 (codegen-unresolved)
+0x8279FF14 = { size = 0x20 }  # auto: split from container 0x8279FA68 (codegen-unresolved)
+0x827A7034 = { size = 0x20 }  # auto: split from container 0x827A6B70 (codegen-unresolved)
+0x823E9C30 = { size = 0x74 }  # auto: runtime crash target
+0x82680D58 = { size = 0x18 }  # auto: runtime crash target
+0x8266D6F8 = { size = 0x8 }  # auto: runtime crash target
+0x826A8600 = { size = 0x20 }  # auto: runtime crash target

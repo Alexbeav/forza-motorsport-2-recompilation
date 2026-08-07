@@ -1,0 +1,13 @@
+# Game data - copyrighted, never commit
+extracted/
+dumps/
+*.dmp
+*.iso
+
+# Build outputs and generated recompiled sources (derived from game binary)
+fm2/out/
+fm2/generated/
+
+# Runtime artifacts
+*.log
+*.zip
