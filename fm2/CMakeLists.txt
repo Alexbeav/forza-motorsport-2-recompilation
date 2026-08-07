@@ -13,6 +13,7 @@ include(generated/rexglue.cmake)
 # Sources
 set(FM2_SOURCES
     src/main.cpp
+    src/hooks.cpp
 )
 
 if(WIN32)

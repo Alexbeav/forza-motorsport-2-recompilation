@@ -8,4 +8,4 @@ game_root = "../extracted"
 [entrypoint]
 file_path = "../extracted/default.xex"
 out_directory_path = "generated/default"
-includes = ["fm2_functions.toml"]
+includes = ["fm2_functions.toml", "fm2_hooks.toml"]

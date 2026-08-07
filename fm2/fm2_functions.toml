@@ -17,3 +17,4 @@
 0x82680D58 = { size = 0x18 }  # auto: runtime crash target
 0x8266D6F8 = { size = 0x8 }  # auto: runtime crash target
 0x826A8600 = { size = 0x20 }  # auto: runtime crash target
+0x8243F898 = { size = 0x10 }  # auto: runtime crash target

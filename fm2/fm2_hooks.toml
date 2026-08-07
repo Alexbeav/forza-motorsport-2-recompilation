@@ -1,0 +1,23 @@
+# Mid-asm hooks (game patches). Kept separate from fm2_functions.toml
+# because the heal loop appends [functions] entries at that file's EOF.
+
+# The blocking read call at 0x8243CA48 (async I/O submit + wait) returns with
+# ctx->r31 zeroed - suspected runtime bug: completion callback runs on the
+# parked thread's context without preserving nonvolatiles (real 360 APC
+# dispatch saves/restores full context). Stash r31 before the call, restore
+# after. Guard kept on the first deref as a belt-and-braces null check.
+[[midasm_hook]]
+name = "SaveR31BeforeRead"
+address = 0x8243CA48
+registers = ["r31"]
+
+[[midasm_hook]]
+name = "RestoreR31AfterRead"
+address = 0x8243CA4C
+registers = ["r31"]
+
+[[midasm_hook]]
+name = "GuardStreamReadNull"
+address = 0x8243CA54
+registers = ["r31"]
+jump_address_on_true = 0x8243CAA4
