@@ -18,3 +18,103 @@
 0x8266D6F8 = { size = 0x8 }  # auto: runtime crash target
 0x826A8600 = { size = 0x20 }  # auto: runtime crash target
 0x8243F898 = { size = 0x10 }  # auto: runtime crash target
+0x821F6EB8 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6EC8 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6ED8 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6EE8 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6EF8 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F08 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F18 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F38 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F48 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F68 = { size = 0x10 }  # auto: data-section vtable sweep
+0x821F6F78 = { size = 0x10 }  # auto: data-section vtable sweep
+0x823ED720 = { size = 0x24 }  # auto: data-section vtable sweep
+0x823ED768 = { size = 0x1C }  # auto: data-section vtable sweep
+0x823F79D8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x823F79E0 = { size = 0x68 }  # auto: data-section vtable sweep  # fn-boundary-end
+# contained-in-larger-span: 0x823F79E8 = { size = 0x8 }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x823F7A28 = { size = 0x8 }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x823F7A30 = { size = 0x8 }  # auto: data-section vtable sweep
+0x823F9C90 = { size = 0x8 }  # auto: data-section vtable sweep
+0x823F9CA0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x823F9CB8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x8240FE18 = { size = 0x2BD8 }  # auto: data-section vtable sweep  # fn-boundary-end
+# contained-in-larger-span: 0x82411580 = { size = 0x1C94 }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x824116F8 = { size = 0x1B1C }  # auto: data-section vtable sweep
+0x824153F4 = { size = 0x34 }  # auto: data-section vtable sweep
+0x82422154 = { size = 0x28 }  # auto: data-section vtable sweep
+0x82422EF4 = { size = 0x18 }  # auto: data-section vtable sweep
+0x82423C40 = { size = 0x34 }  # auto: data-section vtable sweep
+0x82425C98 = { size = 0x18 }  # auto: data-section vtable sweep
+0x824ADD78 = { size = 0x28 }  # auto: data-section vtable sweep
+0x824B02A0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x824B0B30 = { size = 0xE4 }  # auto: data-section vtable sweep
+0x82551CF8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x825DCAE0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x825E58F0 = { size = 0x20 }  # auto: data-section vtable sweep
+0x8260E718 = { size = 0xC }  # auto: data-section vtable sweep
+0x8265D668 = { size = 0x20 }  # auto: data-section vtable sweep
+0x82660900 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82666158 = { size = 0x14 }  # auto: data-section vtable sweep
+0x8268972C = { size = 0x20 }  # auto: data-section vtable sweep
+0x826A15C0 = { size = 0x14 }  # auto: data-section vtable sweep
+0x826B9308 = { size = 0x1C }  # auto: data-section vtable sweep
+0x826BBB04 = { size = 0x58 }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x826BBB38 = { size = 0x24 }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x8275AAFC = { size = 0x1C }  # auto: data-section vtable sweep
+# contained-in-larger-span: 0x8275AB18 = { size = 0x3C }  # auto: data-section vtable sweep
+0x8275AC70 = { size = 0x18 }  # auto: data-section vtable sweep
+0x8275AFE4 = { size = 0x18 }  # auto: data-section vtable sweep
+0x8275B124 = { size = 0xC }  # auto: data-section vtable sweep
+0x8275B804 = { size = 0xBC }  # auto: data-section vtable sweep
+0x827671F0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82767208 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82767218 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82767228 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82767230 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82767238 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780520 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780530 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780540 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780560 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780568 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780578 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780588 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780590 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805A0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805A8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805B0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805B8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805C0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805D0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827805E8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780600 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780628 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82780640 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82796178 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82796188 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827961A0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827961A8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827A8778 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827A8780 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827A8790 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827A87A0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827A87A8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827AE9A8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827AE9C0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827AE9C8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827AE9E8 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827B05F0 = { size = 0x8 }  # auto: data-section vtable sweep
+0x827B0FF8 = { size = 0x4C }  # auto: data-section vtable sweep
+0x827BC740 = { size = 0xC }  # auto: data-section vtable sweep
+0x827FD260 = { size = 0x8 }  # auto: data-section vtable sweep
+0x82803998 = { size = 0x14 }  # auto: data-section vtable sweep
+0x828C4CDC = { size = 0x38 }  # auto: data-section vtable sweep
+0x823F7B40 = { size = 0x28 }  # auto: codegen unresolved target
+0x823F9710 = { size = 0x8 }  # auto: codegen unresolved target
+0x823F9718 = { size = 0x8 }  # auto: codegen unresolved target
+0x823F9720 = { size = 0x8 }  # auto: codegen unresolved target
+0x823F9790 = { size = 0x10 }  # auto: codegen unresolved target
+0x824129F0 = { size = 0x8 }  # auto: codegen unresolved target
+0x8275A960 = { size = 0x1F4 }  # auto: prologue-scan parent of label 0x8275AA70
