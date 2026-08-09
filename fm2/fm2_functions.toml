@@ -5,11 +5,24 @@
 0x823F7A48 = { size = 0x4 }  # auto: codegen unresolved target
 0x8266A6D0 = { size = 0x100 }  # auto: prologue-scan parent of label 0x8266A7BC
 0x827CBAB0 = { size = 0x18 }  # auto: codegen unresolved target
-0x82756380 = { size = 0x210 }  # auto: prologue-scan parent of label 0x82756590  # fn-boundary-end
+0x82756380 = { size = 0x200 }  # split: separate fiber-resume thunk begins at 0x82756580  # fn-boundary-end
 0x8276BED0 = { size = 0x4B8 }  # auto: prologue-scan parent of 0x8276C388  # fn-boundary-end
 0x8279FA68 = { size = 0x4AC }  # auto: prologue-scan parent of 0x8279FF14  # fn-boundary-end
 0x827A6B70 = { size = 0x4C4 }  # auto: prologue-scan parent of 0x827A7034  # fn-boundary-end
-0x82756590 = { size = 0x244 }  # auto: split from container 0x82756380 (codegen-unresolved)
+# mid-function-entry (label): 0x82756590 = { size = 0x244 }  # auto: split from container 0x82756380 (codegen-unresolved)
+0x82756580 = { size = 0x10 }  # runtime: restored fiber LR target (mr/bl/li/tail-branch thunk)  # fn-boundary-end
+0x82610218 = { size = 0x10 }  # runtime: indirect callback thunk (mr/lwz/mr/tail-branch)  # fn-boundary-end
+0x82276A78 = { size = 0x10 }  # split: separate virtual callback thunk begins at 0x82276A88  # fn-boundary-end
+0x82276A88 = { size = 0x18 }  # runtime: indirect callback thunk (lwz/lbz/lwz/lwz/mtctr/bctr)  # fn-boundary-end
+0x821D3ED8 = { size = 0x10 }  # split: separate virtual callback thunk begins at 0x821D3EE8  # fn-boundary-end
+0x821D3EE8 = { size = 0x18 }  # runtime: indirect callback thunk (lwz/lfs/lbz/lwz/mtctr/bctr)  # fn-boundary-end
+0x8227D068 = { size = 0x10 }  # split: virtual dispatch thunk at vtable offset 0x9C  # fn-boundary-end
+0x8227D078 = { size = 0x10 }  # static: adjacent virtual dispatch thunk at vtable offset 0xA0  # fn-boundary-end
+0x8227D088 = { size = 0x10 }  # static: adjacent virtual dispatch thunk at vtable offset 0xA4  # fn-boundary-end
+0x8227D098 = { size = 0x20 }  # runtime: indirect callback thunk loading three 64-bit arguments  # fn-boundary-end
+0x82277538 = { size = 0x10 }  # split: virtual dispatch thunk at vtable offset 0x54  # fn-boundary-end
+0x82277548 = { size = 0x10 }  # runtime: adjacent virtual dispatch thunk at vtable offset 0x58  # fn-boundary-end
+0x82277558 = { size = 0x10 }  # static: adjacent virtual dispatch thunk at vtable offset 0x88  # fn-boundary-end
 0x8276C388 = { size = 0x20 }  # auto: split from container 0x8276BED0 (codegen-unresolved)
 0x8279FF14 = { size = 0x20 }  # auto: split from container 0x8279FA68 (codegen-unresolved)
 0x827A7034 = { size = 0x20 }  # auto: split from container 0x827A6B70 (codegen-unresolved)
@@ -118,3 +131,4 @@
 0x823F9790 = { size = 0x10 }  # auto: codegen unresolved target
 0x824129F0 = { size = 0x8 }  # auto: codegen unresolved target
 0x8275A960 = { size = 0x1F4 }  # auto: prologue-scan parent of label 0x8275AA70
+0x82756590 = { size = 0x244 }  # auto: split from container 0x82756380 (codegen-unresolved)

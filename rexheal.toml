@@ -4,3 +4,10 @@ image_base = 0x82000000
 code_lo = 0x821d0000
 code_hi = 0x8296054c
 sdk = "G:/Games/Silent Hill - Homecoming/recomp/sdk/win-amd64"
+
+# FM2's mandatory splash/intro Bink sequence is over 102 seconds at source
+# duration and may play substantially slower under recompilation. Keep the
+# bounded probe long enough to reproduce failures beyond the intro, while not
+# misclassifying the log-quiet FMV as a 90-second hang.
+probe_seconds = 900
+stall_seconds = 600

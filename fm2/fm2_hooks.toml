@@ -1,31 +1,32 @@
 # Mid-asm hooks (game patches). Kept separate from fm2_functions.toml
 # because the heal loop appends [functions] entries at that file's EOF.
 
-# sub_824530F0 makes a static host call into the guest's non-local context
-# switch. Preserve the old caller's ABI-nonvolatile state so its generated
-# epilogue does not resume on the newly loaded guest stack/register context.
+# sub_82756590 saves the outgoing guest fiber context and loads another one.
+# A direct generated C++ call cannot itself move the host call stack, so pair
+# the guest switch with the SDK's host-fiber primitive. The first hook records
+# the outgoing/target guest context keys; the second switches host stacks after
+# all target registers have been loaded and immediately before the tail call to
+# KeSetCurrentStackPointers.
 [[midasm_hook]]
-name = "SaveContextSwitchCaller"
-address = 0x82453110
-registers = [
-  "r1", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22",
-  "r23", "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31",
-  "cr2", "cr3", "cr4",
-  "f14", "f15", "f16", "f17", "f18", "f19", "f20", "f21", "f22",
-  "f23", "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",
-  "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v28",
-  "v29", "v30", "v31"
-]
+name = "CaptureGuestFiberSwitch"
+address = 0x82756598
+registers = ["r3", "r5"]
 
 [[midasm_hook]]
-name = "RestoreContextSwitchCaller"
-address = 0x82453114
-registers = [
-  "r1", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21", "r22",
-  "r23", "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31",
-  "cr2", "cr3", "cr4",
-  "f14", "f15", "f16", "f17", "f18", "f19", "f20", "f21", "f22",
-  "f23", "f24", "f25", "f26", "f27", "f28", "f29", "f30", "f31",
-  "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v28",
-  "v29", "v30", "v31"
-]
+name = "CommitGuestFiberSwitch"
+address = 0x827567D0
+registers = ["r3"]
+
+# Developer-only fast iteration path. FM2 already owns this decision through
+# its `disablesplashintro` boolean. These hooks override the two reads of that
+# boolean only when FM2_SKIP_INTRO=1 is present in the host environment, so
+# normal launches retain the retail splash/movie state machine unchanged.
+[[midasm_hook]]
+name = "ApplyDeveloperSplashSkipAtStartup"
+address = 0x8221504C
+registers = ["r11"]
+
+[[midasm_hook]]
+name = "ApplyDeveloperSplashSkipAtCleanup"
+address = 0x82216BB8
+registers = ["r11"]
