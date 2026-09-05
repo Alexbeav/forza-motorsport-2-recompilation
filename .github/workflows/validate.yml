@@ -1,0 +1,34 @@
+name: Validate source tree
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  configure-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Add LLVM to PATH
+        shell: pwsh
+        run: '"C:\Program Files\LLVM\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append'
+
+      - name: Reject accidentally tracked game data
+        run: pwsh -NoProfile -File tools/Test-RepositoryBoundary.ps1
+
+      - name: Test source archive workflow without game data
+        run: pwsh -NoProfile -File tools/Test-ReleaseWorkflow.ps1
+
+      - name: Test installed-content metadata without game data
+        shell: pwsh
+        run: |
+          cmake -S tests -B .local/host-tests -G Ninja -DCMAKE_CXX_COMPILER=clang-cl
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          cmake --build .local/host-tests
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          ctest --test-dir .local/host-tests --output-on-failure
+
+      - name: Configure FM2
+        run: cmake -S fm2 --preset win-amd64-release

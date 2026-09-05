@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "distribution_model": "builder-first",
+  "project_license": "BSD-3-Clause",
+  "source_allowlist": "release/source-files.txt",
+  "maximum_source_file_bytes": 52428800,
+  "sdk": {
+    "repository": "https://github.com/Alexbeav/rexglue-sdk.git",
+    "commit": "f16992c92e610c2d71773994436b442d9946f4e1"
+  },
+  "required_game_inputs": [
+    {
+      "path": "default.xex",
+      "size": 11022336,
+      "sha256": "9726066F0C546C4E51340ED02A32AE44A89D4175DE82A2D55AAAF5451D9B120A"
+    }
+  ],
+  "forbidden_directories": [
+    ".git",
+    ".local",
+    "content-packages",
+    "dumps",
+    "extracted",
+    "fm2/generated",
+    "fm2/out",
+    "out",
+    "release-out",
+    "sdk",
+    "user"
+  ],
+  "forbidden_extensions": [
+    ".7z", ".bak", ".bin", ".dll", ".dmp", ".exe", ".iso",
+    ".lib", ".obj", ".pak", ".pdb", ".rar", ".stfs", ".xdc",
+    ".xex", ".xtr", ".zip"
+  ]
+}

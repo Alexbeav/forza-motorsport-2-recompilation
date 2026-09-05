@@ -2,6 +2,8 @@
 // automatically by codegen into the generated sources; definitions live here.
 
 #include <rex/ppc.h>
+#include <rex/cvar.h>
+#include <rex/logging.h>
 #include <rex/system/kernel_state.h>
 #include <rex/system/xmemory.h>
 #include <rex/system/xthread.h>
@@ -14,6 +16,16 @@
 #include <string_view>
 #include <unordered_map>
 #include <vector>
+
+REXCVAR_DEFINE_BOOL(
+    fm2_arcade_probe_logging, false, "Forza Motorsport 2/Diagnostics",
+    "Log the high-frequency arcade-race localization probes")
+    .lifecycle(rex::cvar::Lifecycle::kHotReload);
+
+REXCVAR_DEFINE_BOOL(
+    fm2_content_trace, false, "Forza Motorsport 2/Diagnostics",
+    "Trace guest DLC enumeration, content opens, and mount results")
+    .lifecycle(rex::cvar::Lifecycle::kHotReload);
 
 namespace {
 
@@ -66,6 +78,15 @@ uint32_t ReadGuestU32(uint32_t address) {
   return __builtin_bswap32(raw);
 }
 
+uint32_t ReadGuestU32OrZero(uint32_t address) {
+  return address == 0 ? 0 : ReadGuestU32(address);
+}
+
+bool IsPoisonU32(uint32_t value) {
+  return value == 0xBEBEBEBE || value == 0xCDCDCDCD ||
+         value == 0xDDDDDDDD || value == 0xFEEEFEEE;
+}
+
 void RunGuestFiber(void* opaque) {
   const FiberStart start = *static_cast<FiberStart*>(opaque);
   // Fiber::Create retains the parameter until the first switch. Once entry is
@@ -90,6 +111,33 @@ void RunGuestFiber(void* opaque) {
 
 }  // namespace
 
+void TraceFm2ContentEnumerationCreated(PPCRegister& r1, PPCRegister& r3) {
+  if (!REXCVAR_GET(fm2_content_trace)) return;
+  REXLOG_INFO("FM2_DLC_TRACE enumerator result={:08X} handle={:08X} buffer_size={}",
+              r3.u32, ReadGuestU32(r1.u32 + 84), ReadGuestU32(r1.u32 + 88));
+}
+
+void TraceFm2ContentEnumerationCompleted(PPCRegister& r1, PPCRegister& r3) {
+  if (!REXCVAR_GET(fm2_content_trace)) return;
+  REXLOG_INFO("FM2_DLC_TRACE enumerate result={:08X} count={}",
+              r3.u32, ReadGuestU32(r1.u32 + 80));
+}
+
+void TraceFm2ContentOpenResult(PPCRegister& r3, PPCRegister& r29) {
+  if (!REXCVAR_GET(fm2_content_trace)) return;
+  REXLOG_INFO("FM2_DLC_TRACE open index={} result={:08X}", r29.u32, r3.u32);
+}
+
+void TraceFm2ContentDescriptorResult(PPCRegister& r3, PPCRegister& r29) {
+  if (!REXCVAR_GET(fm2_content_trace)) return;
+  REXLOG_INFO("FM2_DLC_TRACE descriptor index={} result={:08X}", r29.u32, r3.u32);
+}
+
+void TraceFm2ContentMountResult(PPCRegister& r29, PPCRegister& r31) {
+  if (!REXCVAR_GET(fm2_content_trace)) return;
+  REXLOG_INFO("FM2_DLC_TRACE mount index={} result={:02X}", r29.u32, r31.u32 & 0xFF);
+}
+
 void CaptureGuestFiberSwitch(PPCRegister& r3, PPCRegister& r5) {
   if (g_current_host_fiber == nullptr) {
     auto* thread = rex::system::XThread::GetCurrentThread();
@@ -113,6 +161,15 @@ void CommitGuestFiberSwitch(PPCRegister& r3) {
   }
 
   const PendingSwitch pending = pending_it->second;
+  if (IsPoisonU32(static_cast<uint32_t>(pending.cpu_context->lr)) ||
+      IsPoisonU32(pending.cpu_context->r31.u32)) {
+    REXLOG_ERROR(
+        "[FM2_FIBER_POISON] target_context=0x{:08X} "
+        "outgoing_context=0x{:08X} lr=0x{:08X} r31=0x{:08X} sp=0x{:08X}",
+        pending.target_context, pending.outgoing_context,
+        static_cast<uint32_t>(pending.cpu_context->lr),
+        pending.cpu_context->r31.u32, pending.cpu_context->r1.u32);
+  }
   g_host_fibers_by_guest_context[pending.outgoing_context] = current;
   if (pending.target_context == pending.outgoing_context) {
     return;
@@ -161,5 +218,96 @@ void ApplyDeveloperSplashSkipAtStartup(PPCRegister& r11) {
 void ApplyDeveloperSplashSkipAtCleanup(PPCRegister& r11) {
   if (IsDeveloperSplashSkipEnabled()) {
     r11.u64 = 1;
+  }
+}
+
+void ProbeArcadeRaceVirtualCall(PPCRegister& r11, PPCRegister& r28,
+                                PPCRegister& r31) {
+  if (!REXCVAR_GET(fm2_arcade_probe_logging)) {
+    return;
+  }
+  REXLOG_ERROR(
+      "[FM2_ARCADE_PROBE] call target=0x{:08X} receiver=0x{:08X} "
+      "vtable=0x{:08X} inner=0x{:08X} state=0x{:08X}",
+      r11.u32, r28.u32, ReadGuestU32(r28.u32),
+      ReadGuestU32(r28.u32 + 12), r31.u32);
+}
+
+void ProbeArcadeRaceNestedCall(PPCRegister& r3, PPCRegister& r11) {
+  if (!REXCVAR_GET(fm2_arcade_probe_logging)) {
+    return;
+  }
+  REXLOG_ERROR(
+      "[FM2_ARCADE_PROBE] nested target=0x{:08X} inner=0x{:08X} "
+      "vtable=0x{:08X}",
+      r11.u32, r3.u32, ReadGuestU32(r3.u32));
+}
+
+void ProbeArcadeObjectConstruct(PPCRegister& r3, PPCRegister& r4,
+                                PPCRegister& r5) {
+  if (!REXCVAR_GET(fm2_arcade_probe_logging)) {
+    return;
+  }
+  const auto* context = ContextFromR3(r3);
+  REXLOG_ERROR(
+      "[FM2_ARCADE_PROBE] construct object=0x{:08X} inner_ref=0x{:08X} "
+      "inner=0x{:08X} owner=0x{:08X} argument=0x{:08X} "
+      "lr=0x{:08X} r31=0x{:08X} sp=0x{:08X}",
+      r3.u32, r4.u32, ReadGuestU32(r4.u32), ReadGuestU32(r4.u32 + 4),
+      r5.u32, static_cast<uint32_t>(context->lr), context->r31.u32,
+      context->r1.u32);
+}
+
+void ProbeArcadeObjectConstructReturn(PPCRegister& r1, PPCRegister& r3) {
+  const uint32_t saved_lr = ReadGuestU32OrZero(r1.u32 + 104);
+  const uint32_t saved_r31 = ReadGuestU32OrZero(r1.u32 + 96);
+  if (IsPoisonU32(saved_lr) || IsPoisonU32(saved_r31)) {
+    REXLOG_ERROR(
+        "[FM2_CONSTRUCT_RETURN_POISON] object=0x{:08X} sp=0x{:08X} "
+        "saved_lr=0x{:08X} saved_r31=0x{:08X}",
+        r3.u32, r1.u32, saved_lr, saved_r31);
+  }
+}
+
+void GuardUnavailableFrontendService(PPCRegister& r3, PPCRegister& r11) {
+  if (r11.u32 != 0 && ReadGuestU32(r3.u32 + 12) == 0) {
+    r11.u64 = 0;
+  }
+}
+
+void GuardUnavailableRaceServiceCleanup(PPCRegister& r11,
+                                        PPCRegister& r31) {
+  if (r11.u32 == 0) {
+    return;
+  }
+  const uint32_t service = ReadGuestU32OrZero(r31.u32 + 12);
+  const uint32_t backing_interface = ReadGuestU32OrZero(
+      service == 0 ? 0 : service + 12);
+  if (service != 0 && backing_interface == 0) {
+    REXLOG_ERROR(
+        "[FM2_RACE_GUARD] skipped unavailable race service cleanup "
+        "owner=0x{:08X} service=0x{:08X}",
+        r31.u32, service);
+    r11.u64 = 0;
+  }
+}
+
+void ProbeRaceLiveServiceInner(PPCRegister& r1, PPCRegister& r3,
+                               PPCRegister& r4, PPCRegister& r11,
+                               PPCRegister& r24) {
+  const uint32_t inner_vtable = ReadGuestU32OrZero(r4.u32);
+  if (r4.u32 == 0 || inner_vtable == 0) {
+    const uint32_t receiver_vtable = ReadGuestU32OrZero(r24.u32);
+    REXLOG_ERROR(
+        "[FM2_RACE_PROBE] invalid inner object before 0x825401B4 "
+        "sp=0x{:08X} destination=0x{:08X} wrapper=0x{:08X} "
+        "inner=0x{:08X} inner_vtable=0x{:08X} retain=0x{:08X} "
+        "receiver=0x{:08X} receiver_vtable=0x{:08X} query=0x{:08X} "
+        "out=0x{:08X} old=0x{:08X}",
+        r1.u32, r3.u32, r11.u32, r4.u32, inner_vtable,
+        ReadGuestU32OrZero(inner_vtable == 0 ? 0 : inner_vtable + 4), r24.u32,
+        receiver_vtable,
+        ReadGuestU32OrZero(receiver_vtable == 0 ? 0 : receiver_vtable + 160),
+        ReadGuestU32OrZero(r1.u32 + 88), ReadGuestU32OrZero(r1.u32 + 80));
   }
 }

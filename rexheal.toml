@@ -3,7 +3,16 @@ project = "fm2"
 image_base = 0x82000000
 code_lo = 0x821d0000
 code_hi = 0x8296054c
-sdk = "G:/Games/Silent Hill - Homecoming/recomp/sdk/win-amd64"
+sdk = "sdk/win-amd64"
+sdk_source_commit = "f16992c92e610c2d71773994436b442d9946f4e1"
+sdk_rexglue_sha256 = "651403CAD3BCC3D9ACAF82595A93005921638B9489C4159BA913E9ABC8DBAAB5"
+sdk_runtime_sha256 = "2E7F0FDC359F2DE7A85E14752B365251EF2E9806281A12AEA71029C91F35944D"
+pdata_static_batch = true
+static_knowledge_census = "out/diagnostics/static-knowledge.json.gz"
+milestone_state_file = "fm2/out/diagnostics/manual-milestones.json"
+runtime_profile = "probe"
+wer_local_dumps = true
+host_dump_dir = "fm2/out/diagnostics/host-dumps"
 
 # FM2's mandatory splash/intro Bink sequence is over 102 seconds at source
 # duration and may play substantially slower under recompilation. Keep the
@@ -11,3 +20,24 @@ sdk = "G:/Games/Silent Hill - Homecoming/recomp/sdk/win-amd64"
 # misclassifying the log-quiet FMV as a 90-second hang.
 probe_seconds = 900
 stall_seconds = 600
+
+[runtime_profiles.probe]
+runtime_toml = "fm2/fm2_runtime.toml"
+
+[[milestone]]
+name = "runtime_initialized"
+pattern = "Runtime initialized successfully"
+
+[[milestone]]
+name = "xex_loaded"
+pattern = "Loading XEX image:"
+
+[[milestone]]
+name = "graphics_ready"
+pattern = "Created [0-9]+ graphics pipelines"
+
+[[milestone]]
+name = "menu"
+
+[[milestone]]
+name = "race"

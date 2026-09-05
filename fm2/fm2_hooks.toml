@@ -1,6 +1,33 @@
 # Mid-asm hooks (game patches). Kept separate from fm2_functions.toml
 # because the heal loop appends [functions] entries at that file's EOF.
 
+# Read-only diagnostics in the retail marketplace-loading routine. They do
+# not change registers, license bits, or game data. Disabled by default.
+[[midasm_hook]]
+name = "TraceFm2ContentEnumerationCreated"
+address = 0x82209900
+registers = ["r1", "r3"]
+
+[[midasm_hook]]
+name = "TraceFm2ContentEnumerationCompleted"
+address = 0x82209968
+registers = ["r1", "r3"]
+
+[[midasm_hook]]
+name = "TraceFm2ContentOpenResult"
+address = 0x82209A3C
+registers = ["r3", "r29"]
+
+[[midasm_hook]]
+name = "TraceFm2ContentDescriptorResult"
+address = 0x82209A6C
+registers = ["r3", "r29"]
+
+[[midasm_hook]]
+name = "TraceFm2ContentMountResult"
+address = 0x82209B40
+registers = ["r29", "r31"]
+
 # sub_82756590 saves the outgoing guest fiber context and loads another one.
 # A direct generated C++ call cannot itself move the host call stack, so pair
 # the guest switch with the SDK's host-fiber primitive. The first hook records
@@ -30,3 +57,51 @@ registers = ["r11"]
 name = "ApplyDeveloperSplashSkipAtCleanup"
 address = 0x82216BB8
 registers = ["r11"]
+
+# Temporary localization probe for the arcade-race AV. The crash leaves LR at
+# the return from this virtual call. The hooks remain installed, but their
+# high-frequency logging is disabled unless fm2_arcade_probe_logging is true.
+[[midasm_hook]]
+name = "ProbeArcadeRaceVirtualCall"
+address = 0x82543E0C
+registers = ["r11", "r28", "r31"]
+
+[[midasm_hook]]
+name = "ProbeArcadeRaceNestedCall"
+address = 0x8242CB08
+registers = ["r3", "r11"]
+
+[[midasm_hook]]
+name = "ProbeArcadeObjectConstruct"
+address = 0x8242BB88
+registers = ["r3", "r4", "r5"]
+
+[[midasm_hook]]
+name = "ProbeArcadeObjectConstructReturn"
+address = 0x8242BBF0
+registers = ["r1", "r3"]
+
+# sub_8242A3C8 already returns false when this optional frontend service is
+# disabled. Some valid constructions enable it without supplying the backing
+# interface at +12; fold that unavailable state into the existing false path
+# before the guest dereferences the null interface.
+[[midasm_hook]]
+name = "GuardUnavailableFrontendService"
+address = 0x8242A3CC
+registers = ["r3", "r11"]
+
+# The race-service owner can keep its active flag after the optional backing
+# interface becomes unavailable. Use the same availability condition as the
+# frontend guard. The existing branch then skips the invalid cleanup path.
+[[midasm_hook]]
+name = "GuardUnavailableRaceServiceCleanup"
+address = 0x8254ABAC
+registers = ["r11", "r31"]
+
+# Temporary live-race probe: the AV has LR 0x825401B8 after a virtual query
+# returns a non-null wrapper. The inner object has a null vtable. Record both
+# object layers after the inner load and before the retain helper call.
+[[midasm_hook]]
+name = "ProbeRaceLiveServiceInner"
+address = 0x825401B4
+registers = ["r1", "r3", "r4", "r11", "r24"]

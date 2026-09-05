@@ -1,0 +1,13 @@
+* text=auto
+
+*.bat text eol=crlf
+*.cmake text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+
+# The function map is generated and very large; keep it out of GitHub's
+# language statistics while retaining it as normal reviewable source.
+fm2/fm2_functions.toml linguist-generated=true

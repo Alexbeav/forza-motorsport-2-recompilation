@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.25)
+project(fm2_host_tests LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+enable_testing()
+add_executable(content_status_test content_status_test.cpp)
+target_include_directories(content_status_test PRIVATE ../fm2/src)
+add_test(NAME content_status COMMAND content_status_test)

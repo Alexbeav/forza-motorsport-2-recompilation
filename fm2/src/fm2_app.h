@@ -16,6 +16,8 @@ class Fm2App : public rex::ReXApp {
         PPCImageConfig));
   }
 
+  void OnPostSetup() override;
+
   // Override virtual hooks for customization:
   // void OnPostInitLogging() override {}
   // void OnPreSetup(rex::RuntimeConfig& config) override {}

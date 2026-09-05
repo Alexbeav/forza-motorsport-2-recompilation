@@ -7,6 +7,17 @@ dumps/
 # Build outputs and generated recompiled sources (derived from game binary)
 fm2/out/
 fm2/generated/
+/out/
+.local/
+release-out/
+content-packages/
+
+# Machine-local build configuration and tools
+CMakeUserPresets.json
+.rexheal-backups/
+/sdk/
+# Local instrumented build; not part of the supported source release.
+/Launch FM2 Telemetry B5.bat
 
 # Runtime artifacts
 *.log
