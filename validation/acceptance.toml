@@ -1,0 +1,36 @@
+# Recomp Project Contract v1 — acceptance contract. PROPOSED until Alex accepts (X360 Work XW-1).
+contract_version = 1
+project_id = "X360-FM2"
+status = "proposed"
+
+required_artifacts = [
+  "validation run receipt with build-provenance.json hashes",
+  "runtime log with milestone timestamps",
+  "content receipt listing the four DLC packages and their header hashes",
+  "save file hashes before and after reload",
+]
+
+[route]
+summary = "Release-candidate build: menu, one completed race, save and reload with DLC present"
+steps = [
+  "Cold start of the release-candidate build with all four DLC packages installed",
+  "Reach the main menu",
+  "Start and complete one race",
+  "Save, quit, relaunch and load; confirm progress is intact",
+]
+time_bound = "about 20 minutes"
+
+[[milestones]]
+name = "main_menu"
+observation = "main menu rendered and navigable"
+
+[[milestones]]
+name = "race_completed"
+observation = "race result screen after a finished race"
+
+[[milestones]]
+name = "save_reload_intact"
+observation = "after relaunch the completed race is recorded"
+
+[oracle]
+kind = "tbd"

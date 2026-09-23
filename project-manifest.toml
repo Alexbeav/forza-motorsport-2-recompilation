@@ -1,0 +1,23 @@
+# Recomp Project Contract v1 — schema authority: X360-References/contract (SPEC.md).
+contract_version = 1
+project_id = "X360-FM2"
+title = "Forza Motorsport 2"
+platform = "xbox360"
+maturity = "in-game"
+
+[identity]
+title_id = "4D5307EA"
+media_id = "3E3180AE"
+region = "Europe"
+guest_executable_sha256 = "9726066F0C546C4E51340ED02A32AE44A89D4175DE82A2D55AAAF5451D9B120A"
+
+[repo]
+url = "https://github.com/Alexbeav/forza-motorsport-2-recompilation"
+
+[sdk]
+repo = "https://github.com/Alexbeav/rexglue-sdk"
+commit = "f16992c92e610c2d71773994436b442d9946f4e1"
+line = "ReXGlue workbench"
+
+[acceptance]
+contract = "validation/acceptance.toml"
