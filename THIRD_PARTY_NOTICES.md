@@ -21,3 +21,11 @@ owner and approved for the launcher package. The Forza Motorsport 2 logo and
 trademarks belong to their respective owners. This image is not covered by
 the project's BSD 3-Clause source-code license. Its inclusion does not grant
 rights to Forza Motorsport 2 or its trademarks.
+
+## Owner-supplied game screenshots
+
+The twelve JPEG images under `docs/screenshots/` were supplied by the project
+owner for the README. They show Forza Motorsport 2 during release testing.
+Game artwork, vehicle branding and other third-party content shown in them
+belong to their respective owners. These images are not covered by the
+project's BSD 3-Clause source-code license.

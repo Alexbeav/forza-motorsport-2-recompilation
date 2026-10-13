@@ -6,13 +6,26 @@ Motorsport 2 using [ReXGlue](https://github.com/rexglue/rexglue-sdk).
 The latest experimental source release adds a graphical settings launcher.
 
 This repository contains project source, recompilation metadata, and build
-configuration and a separately identified launcher branding image. It does not contain game inputs, Xbox system files, saves,
+configuration, a launcher branding image and owner-supplied screenshots. It does not contain game inputs, Xbox system files, saves,
 generated translation, or compiled executables. You must provide files from
 your own legally obtained copy of the game.
 
 The independently authored project material is licensed under the BSD
 3-Clause License. The license does not grant rights to Forza Motorsport 2 or
 other third-party content. See [License and content boundary](docs/LEGAL.md).
+
+Screenshots below are from the owner's 2026-10-13 release test session.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/fm2_CEtb6N9GUD.jpg" alt="Forza Motorsport 2 title screen" width="100%"></td>
+    <td width="50%"><img src="docs/screenshots/fm2_CnhaHAP5Je.jpg" alt="Forza Motorsport 2 logo screen" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/fm2_CeCql4Ix78.jpg" alt="Car silhouette loading screen" width="100%"></td>
+    <td><img src="docs/screenshots/fm2_jy1SQUf4cd.jpg" alt="Arcade car selection showing the 2005 Ford Mustang GT" width="100%"></td>
+  </tr>
+</table>
 
 ## Project status
 
@@ -31,6 +44,17 @@ public base-game build remain unqualified. The newer launcher and FPS-cap
 build still need an owner-run game check.
 
 See [Current status](docs/STATUS.md) for the exact tested boundary.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/fm2_5gb4FpanPK.jpg" alt="Ford Mustang GT on the Nissan Speedway grid" width="100%"></td>
+    <td width="50%"><img src="docs/screenshots/fm2_kciaM6n8kn.jpg" alt="Ford Mustang GT at the race countdown" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/fm2_FyVCJJDTWD.jpg" alt="Arcade race on Nissan Speedway from the chase camera" width="100%"></td>
+    <td><img src="docs/screenshots/fm2_pylrCyrKzz.jpg" alt="Completed arcade race results with the Ford Mustang GT" width="100%"></td>
+  </tr>
+</table>
 
 ## Requirements
 
@@ -72,6 +96,17 @@ profile folder to keep progress. Native 1x is the tested default; 2x has known
 wavy graphics and 3x is untested. See [FM2 launcher](docs/LAUNCHER.md) for controls,
 build requirements and checks. These controls are included in
 `v0.1.0-alpha.2`; the earlier `v0.1.0-alpha.1` archive is unchanged.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/fm2_cH6vi40Hq6.jpg" alt="Arcade track selection showing Nissan Speedway" width="100%"></td>
+    <td width="50%"><img src="docs/screenshots/fm2_3FdWPL6Cin.jpg" alt="Career region selection showing Europe" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/fm2_MQzOssnhdw.jpg" alt="Career event selection showing North American Open" width="100%"></td>
+    <td><img src="docs/screenshots/fm2_PYm5bh5EGY.jpg" alt="Eagle Talon starting a career race" width="100%"></td>
+  </tr>
+</table>
 
 ## Marketplace content
 

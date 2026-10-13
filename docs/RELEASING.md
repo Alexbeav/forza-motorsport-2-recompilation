@@ -12,6 +12,10 @@ The source archive is built from the exact paths in
 validated game executable identity are machine-readable in
 [`release/release-policy.json`](../release/release-policy.json).
 
+The allowlisted launcher logo and twelve owner-supplied README screenshots
+are included as documentation and branding content. Their separate content
+notice is in [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
+
 The archive must not contain:
 
 - game files, disc images, XEX files, marketplace packages, or Xbox system
