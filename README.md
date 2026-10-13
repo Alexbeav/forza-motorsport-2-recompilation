@@ -3,8 +3,10 @@
 An experimental static recompilation of the Xbox 360 version of Forza
 Motorsport 2 using [ReXGlue](https://github.com/rexglue/rexglue-sdk).
 
+The latest experimental source release adds a graphical settings launcher.
+
 This repository contains project source, recompilation metadata, and build
-configuration. It does not contain game data, Xbox system files, saves,
+configuration and a separately identified launcher branding image. It does not contain game inputs, Xbox system files, saves,
 generated translation, or compiled executables. You must provide files from
 your own legally obtained copy of the game.
 
@@ -68,8 +70,8 @@ After building, open `Launch FM2 Settings.bat` for VSync, an independent FPS
 cap, window resolution, fullscreen and render scale. Select your existing
 profile folder to keep progress. Native 1x is the tested default; 2x has known
 wavy graphics and 3x is untested. See [FM2 launcher](docs/LAUNCHER.md) for controls,
-build requirements and checks. The launcher is newer than the published
-`v0.1.0-alpha.1` archive.
+build requirements and checks. These controls are included in
+`v0.1.0-alpha.2`; the earlier `v0.1.0-alpha.1` archive is unchanged.
 
 ## Marketplace content
 

@@ -23,12 +23,14 @@ pwsh -NoProfile -STA -File .\tools\Launch-Graphical.ps1 `
   -SettingsPath "D:\FM2-launcher\settings.json"
 ```
 
-The header can display your local full-screen FM2 logo screenshot on black.
-Put the original PNG at `.local/launcher/fm2-logo-screenshot.png`, or pass
+The header uses the supplied FM2 logo screenshot in `tools/assets/fm2-logo.png`.
+The owner approved including this branding image in the launcher source package.
+See [Third-party notices](../THIRD_PARTY_NOTICES.md) for its separate content notice.
+To override it locally, put your full-screen logo PNG at
+`.local/launcher/fm2-logo-screenshot.png`, or pass
 `-LogoScreenshot "D:\Pictures\fm2-logo.png"`. The launcher displays the main
-logo region without changing the image file. The screenshot stays outside
-version control and source archives. With no screenshot, the header uses a
-plain text title.
+logo region without changing the file. If the chosen image is missing, it
+uses a plain text title.
 
 ## Graphics controls
 

@@ -11,6 +11,10 @@ Xbox executable files, saves, disc images, downloadable content, trademarks,
 or other third-party material. Users must provide their own legally obtained,
 extracted game data and optional marketplace content.
 
+The launcher branding image at `tools/assets/fm2-logo.png` is separately
+identified in [Third-party notices](../THIRD_PARTY_NOTICES.md). It is excluded
+from the project's BSD source-code license grant.
+
 ## Generated translation
 
 ReXGlue generates C++ from the user-supplied Xbox executable. Generated

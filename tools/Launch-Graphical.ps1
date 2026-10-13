@@ -33,7 +33,12 @@ $controls = @{}
 foreach ($name in @('Surface','HeaderArtwork','HeaderBrush','HeaderFallback','VSync','Fullscreen','Resolution','MaxFps','Scale','ScaleNote','ExecutablePath','GameDataRoot','UserDataRoot','ContentRoot','BrowseBuild','BrowseGame','BrowseUser','BrowseContent','Save','Start','Status')) {
     $controls[$name] = $window.FindName($name)
 }
-if (-not $LogoScreenshot) { $LogoScreenshot = Join-Path (Get-Fm2RepositoryRoot) '.local/launcher/fm2-logo-screenshot.png' }
+if (-not $LogoScreenshot) {
+    $LogoScreenshot = Join-Path (Get-Fm2RepositoryRoot) '.local/launcher/fm2-logo-screenshot.png'
+    if (-not (Test-Path -LiteralPath $LogoScreenshot -PathType Leaf)) {
+        $LogoScreenshot = Join-Path $PSScriptRoot 'assets/fm2-logo.png'
+    }
+}
 if (Test-Path -LiteralPath $LogoScreenshot -PathType Leaf) {
     $bitmap = [Windows.Media.Imaging.BitmapImage]::new()
     $bitmap.BeginInit()

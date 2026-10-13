@@ -39,6 +39,7 @@ tools/Run-Local.ps1
 tools/Launcher.Common.ps1
 tools/Launch-Graphical.ps1
 tools/Launcher.xaml
+tools/assets/fm2-logo.png
 tools/Test-Launcher.ps1
 tools/Test-RepositoryBoundary.ps1
 tools/Test-ReleaseWorkflow.ps1
