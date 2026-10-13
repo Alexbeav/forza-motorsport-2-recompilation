@@ -4,5 +4,9 @@ log_file = "fm2.log"
 gpu_plugin = "xenos"
 gpu_allow_invalid_fetch_constants = true
 allow_game_relative_writes = true
-# Read-only DLC diagnostics. Enable for an operator-approved diagnostic run.
+# 2x scaling failed visual correctness on the source candidate. Keep native scale.
+resolution_scale = 1
+draw_resolution_scale_x = 1
+draw_resolution_scale_y = 1
+# Run-Local writes the requested -TraceContent value into the runtime copy.
 fm2_content_trace = false

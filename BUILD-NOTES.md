@@ -67,5 +67,6 @@ ctest --test-dir .local/host-tests --output-on-failure
 ```
 
 The release tests cover archive identity, parent Git repositories, changed source files, deterministic archives, and native command failures.
+Synthetic launch tests cover paths with spaces, user-data selection, trace precedence, native scaling, and validation without writes or game execution.
 The content tests cover missing files, incomplete headers, wrong identities, empty content, and stored license masks.
 Both test suites preserve their fixtures in the host temporary directory.

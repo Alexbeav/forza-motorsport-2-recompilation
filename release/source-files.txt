@@ -36,3 +36,6 @@ tools/Test-RepositoryBoundary.ps1
 tools/Test-ReleaseWorkflow.ps1
 tests/CMakeLists.txt
 tests/content_status_test.cpp
+project-manifest.toml
+validation/acceptance.toml
+validation/runs/.gitkeep

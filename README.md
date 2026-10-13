@@ -58,7 +58,8 @@ pwsh -File .\tools\Run-Local.ps1 -GameDataRoot "D:\Games\FM2-extracted"
 Use `-ValidateOnly` to test source identity, the game executable, and the toolchain without an SDK build.
 An extracted source archive uses `SOURCE-PROVENANCE.json`, which records its source commit and file hashes.
 The builder rejects archive files that differ from those hashes.
-The run script keeps profiles, saves, content, and caches under `.local/user`.
+The run script keeps profiles, saves, content, and caches under `.local/user` by default.
+See [Marketplace content](docs/CONTENT.md#user-data-location) for `-UserDataRoot` and launch validation without starting FM2.
 
 ## Marketplace content
 
