@@ -4,6 +4,7 @@
 BUILD-NOTES.md
 LICENSE
 Launch FM2.bat
+Launch FM2 Settings.bat
 README.md
 THIRD_PARTY_NOTICES.md
 docs/LEGAL.md
@@ -12,6 +13,7 @@ docs/RELEASE_NOTES.md
 docs/RELEASING.md
 docs/STATUS.md
 docs/canonical-sources.md
+docs/LAUNCHER.md
 fm2/CMakeLists.txt
 fm2/CMakePresets.json
 fm2/cmake/rexglue.cmake
@@ -27,15 +29,21 @@ fm2/src/hooks.cpp
 fm2/src/main.cpp
 release/release-policy.json
 release/source-files.txt
+release/sdk-fps-cap.patch
 rexheal.toml
 tools/Build-Local.ps1
 tools/New-SourceRelease.ps1
 tools/Release.Common.ps1
 tools/Run-Local.ps1
+tools/Launcher.Common.ps1
+tools/Launch-Graphical.ps1
+tools/Launcher.xaml
+tools/Test-Launcher.ps1
 tools/Test-RepositoryBoundary.ps1
 tools/Test-ReleaseWorkflow.ps1
 tests/CMakeLists.txt
 tests/content_status_test.cpp
+tests/frame_pacer_test.cpp
 project-manifest.toml
 validation/acceptance.toml
 validation/runs/.gitkeep

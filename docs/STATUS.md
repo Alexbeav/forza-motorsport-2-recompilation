@@ -1,6 +1,21 @@
 # Current status
 
-Last source and content review: 2026-09-05 on Windows AMD64 with D3D12.
+## Launcher build — 2026-10-13
+
+The graphical launcher and independent host FPS-cap patch passed settings,
+source-boundary, packaging and native pacing checks. The selected GPU plugin
+consumed its cap from TOML without changing the guest refresh setting.
+The private test candidate reuses the released-source FM2 executable with a
+rebuilt GPU plugin. Its profile copy matched all 73 files at staging.
+No game was started by these checks. An owner run of this candidate remains
+pending. See [FM2 launcher](LAUNCHER.md) for controls and limitations.
+
+The earlier public release test completed a race, arcade unlocks, career
+startup and save/reload, as reported by the owner on 2026-10-13. The normal
+run had no reported hiccups without a debugger. This does not establish
+extended stability or qualify the newer FPS-cap candidate.
+
+Launcher review: 2026-10-13. Earlier source and content review: 2026-09-05 on Windows AMD64 with D3D12.
 This document owns the tested behavior and its limits.
 
 ## Test evidence
@@ -35,8 +50,9 @@ The September 3 retained developer build, September 4 telemetry build, and later
 
 - The earlier automated smoke capture was black, but the later owner-operated
   run confirmed main-menu rendering, navigation, race loading, and live driving.
-- Race completion, saving, progression, and long-run stability have not been
-  validated for this release candidate.
+- The September 5 candidate's race completion, saving and progression were
+  untested then. The October 13 public release test covers the bounded route
+  above; long-run stability remains unqualified.
 - The runtime reports missing optional audio banks and language directories in
   the tested extracted tree. The effect beyond startup is not yet known.
 - Some GPU resolve operations and kernel services remain incomplete or stubbed.

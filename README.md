@@ -21,9 +21,12 @@ This is an experimental alpha source release for the European retail game:
 - Tested host: Windows AMD64 with Direct3D 12
 - SDK: continuation-aware ReXGlue revision `f16992c`
 
-The owner operated the main menu and a live eight-car race on 2026-09-04.
-The longer telemetry run used a locally patched SDK, not the unchanged release pin.
-Race completion, save/reload, progression, and DLC car availability remain untested.
+The owner completed a race, unlocked arcade cars/tracks, started career and
+confirmed retained progress after save/reload during release testing on
+2026-10-13. He reported no hiccups on the normal run without a debugger.
+These are bounded observations; extended stability and DLC coverage on the
+public base-game build remain unqualified. The newer launcher and FPS-cap
+build still need an owner-run game check.
 
 See [Current status](docs/STATUS.md) for the exact tested boundary.
 
@@ -60,6 +63,13 @@ An extracted source archive uses `SOURCE-PROVENANCE.json`, which records its sou
 The builder rejects archive files that differ from those hashes.
 The run script keeps profiles, saves, content, and caches under `.local/user` by default.
 See [Marketplace content](docs/CONTENT.md#user-data-location) for `-UserDataRoot` and launch validation without starting FM2.
+
+After building, open `Launch FM2 Settings.bat` for VSync, an independent FPS
+cap, window resolution, fullscreen and render scale. Select your existing
+profile folder to keep progress. Native 1x is the tested default; higher
+scales are experimental. See [FM2 launcher](docs/LAUNCHER.md) for controls,
+build requirements and checks. The launcher is newer than the published
+`v0.1.0-alpha.1` archive.
 
 ## Marketplace content
 

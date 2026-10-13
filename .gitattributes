@@ -6,6 +6,7 @@
 *.h text eol=lf
 *.json text eol=lf
 *.md text eol=lf
+*.patch text eol=lf whitespace=-blank-at-eol
 *.toml text eol=lf
 
 # The function map is generated and very large; keep it out of GitHub's

@@ -77,6 +77,11 @@ into `.local/work`, generates translation there, and builds FM2. It writes
 `build-provenance.json` beside the local executable. No game input or generated
 translation is uploaded.
 
+The launcher sources add a small, allowlisted FPS-cap patch to the pinned SDK
+build. The builder records its hash and feature in the receipt, then restores
+the SDK sources. See [FM2 launcher](LAUNCHER.md) for this build's controls and
+checks. The published `v0.1.0-alpha.1` archive predates these changes.
+
 The builder reads source identity before the SDK build.
 Without a local `.git` entry, it requires `SOURCE-PROVENANCE.json` and matching hashes for every allowlisted file.
 A parent Git repository never supplies archive identity.

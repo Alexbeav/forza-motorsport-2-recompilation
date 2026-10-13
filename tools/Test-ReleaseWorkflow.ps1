@@ -103,7 +103,7 @@ $fixtureBuild = Join-Path $fixtureWork "out/build/win-amd64-release"
 [IO.File]::WriteAllText((Join-Path $fixtureBuild "fm2.exe"), "Non-executable launch-plan fixture.")
 Copy-Item -LiteralPath (Join-Path $packageRoot "fm2/fm2_runtime.toml") -Destination (Join-Path $fixtureWork "fm2_runtime.toml")
 $sentinelPath = Join-Path $fixtureBuild "fm2.toml"
-[IO.File]::WriteAllText($sentinelPath, "Validation must not overwrite this file.")
+[IO.File]::WriteAllText($sentinelPath, ([IO.File]::ReadAllText((Join-Path $fixtureWork 'fm2_runtime.toml')) + "`nvsync = false`n# Validation must not overwrite this file.`n"))
 $sentinelHash = (Get-FileHash -LiteralPath $sentinelPath).Hash
 $fixtureUser = Join-Path $testRoot "short user with spaces"
 $runner = Join-Path $packageRoot "tools/Run-Local.ps1"
@@ -113,6 +113,7 @@ Assert-Condition ($plan.Arguments -contains "--user_data_root=$fixtureUser" -and
 Assert-Condition ($plan.RuntimeConfiguration -match '(?m)^fm2_content_trace = true$' -and $plan.RuntimeConfiguration -notmatch 'fm2_content_trace\s*=\s*false') "The runtime configuration disabled the requested trace."
 Assert-Condition (@([regex]::Matches($plan.RuntimeConfiguration, '(?m)^fm2_content_trace\s*=')).Count -eq 1) "The runtime configuration contains duplicate trace assignments."
 Assert-Condition ($plan.RuntimeConfiguration -match '(?m)^resolution_scale = 1\r?$') "The default runtime configuration enables the failed scaling experiment."
+Assert-Condition ($plan.RuntimeConfiguration -match '(?m)^vsync = false$') "The run script discarded a saved graphics setting."
 Assert-Condition ((Get-FileHash -LiteralPath $sentinelPath).Hash -eq $sentinelHash -and -not (Test-Path -LiteralPath $fixtureUser)) "ValidateOnly changed configuration or created user data."
 $defaultPlan = & $runner -GameDataRoot $fixtureGame -ValidateOnly
 Assert-Condition ($defaultPlan.UserDataRoot -eq (Join-Path $packageRoot '.local/user') -and $defaultPlan.RuntimeConfiguration -match '(?m)^fm2_content_trace = false$') "Default user data or disabled tracing changed."

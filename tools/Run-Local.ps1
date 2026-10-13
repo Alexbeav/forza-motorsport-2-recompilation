@@ -7,7 +7,7 @@ param(
     [switch]$ValidateOnly
 )
 
-. (Join-Path $PSScriptRoot "Release.Common.ps1")
+. (Join-Path $PSScriptRoot "Launcher.Common.ps1")
 
 $root = Get-Fm2RepositoryRoot
 $resolvedGameRoot = Assert-Fm2GameInputs -GameDataRoot $GameDataRoot
@@ -20,8 +20,9 @@ if (-not (Test-Path -LiteralPath $executable -PathType Leaf)) {
 $template = [IO.File]::ReadAllText((Join-Path $root ".local/work/fm2/fm2_runtime.toml"))
 # This SDK loads the flat runtime configuration after command-line values.
 # Write the requested trace value there so the template's false value cannot win.
-$runtimeConfiguration = [regex]::Replace($template, '(?m)^fm2_content_trace\s*=.*\r?\n?', '').TrimEnd()
-$runtimeConfiguration += "`nfm2_content_trace = $($TraceContent.IsPresent.ToString().ToLowerInvariant())`n"
+$existingConfig = Join-Path $buildRoot 'fm2.toml'
+if (Test-Path -LiteralPath $existingConfig -PathType Leaf) { $template = [IO.File]::ReadAllText($existingConfig) }
+$runtimeConfiguration = Merge-Fm2RuntimeConfiguration $template ([ordered]@{ fm2_content_trace = $TraceContent.IsPresent })
 $localUserRoot = if ($UserDataRoot) { [IO.Path]::GetFullPath($UserDataRoot) } else { Join-Path $root ".local/user" }
 if ((Test-Path -LiteralPath $localUserRoot) -and -not (Test-Path -LiteralPath $localUserRoot -PathType Container)) {
     throw "User data path is not a folder: $localUserRoot"

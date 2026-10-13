@@ -7,6 +7,7 @@
 | Marketplace content and diagnostics | [Marketplace content](CONTENT.md) |
 | Build constraints | [Build notes](../BUILD-NOTES.md) |
 | Runtime configuration | [`fm2/fm2_runtime.toml`](../fm2/fm2_runtime.toml) |
+| Graphical launcher and FPS cap | [FM2 launcher](LAUNCHER.md) |
 | Recompilation inputs | [`fm2/fm2_manifest.toml`](../fm2/fm2_manifest.toml) |
 | License and third-party content boundary | [License and content boundary](LEGAL.md) |
 | Release contents and workflow | [Builder-first release process](RELEASING.md) |

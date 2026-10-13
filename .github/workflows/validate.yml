@@ -21,6 +21,9 @@ jobs:
       - name: Test source archive workflow without game data
         run: pwsh -NoProfile -File tools/Test-ReleaseWorkflow.ps1
 
+      - name: Test launcher settings without starting FM2
+        run: pwsh -NoProfile -File tools/Test-Launcher.ps1
+
       - name: Test installed-content metadata without game data
         shell: pwsh
         run: |

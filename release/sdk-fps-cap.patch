@@ -1,0 +1,76 @@
+diff --git a/src/graphics/command_processor.cpp b/src/graphics/command_processor.cpp
+index 1ab79a0..3ebe5f6 100644
+--- a/src/graphics/command_processor.cpp
++++ b/src/graphics/command_processor.cpp
+@@ -33,11 +33,19 @@
+ #include <rex/memory.h>
+ #include <rex/memory/ring_buffer.h>
+ #include <rex/stream.h>
++#include <rex/thread.h>
+ #include <rex/system/kernel_state.h>
+ #include <rex/system/user_module.h>
+ 
++#include "frame_pacer.h"
++
+ REXCVAR_DEFINE_BOOL(vsync, true, "GPU", "Enable vertical sync");
+ 
++REXCVAR_DEFINE_INT32(gpu_max_fps, 0, "GPU",
++                     "Maximum host frame-swap rate; 0 is unlimited. Does not change guest vblank.")
++    .range(0, 1000)
++    .lifecycle(rex::cvar::Lifecycle::kHotReload);
++
+ REXCVAR_DEFINE_BOOL(clear_memory_page_state, true, "GPU",
+                     "Refresh page-valid state from GPU-written memory at frame end. "
+                     "Disable for minor CPU overhead reduction, but may break memory coherency.")
+@@ -1114,6 +1122,9 @@ bool CommandProcessor::ExecutePacketType3_XE_SWAP(memory::RingBuffer* reader, ui
+   uint32_t frontbuffer_height = reader->ReadAndSwap<uint32_t>();
+   reader->AdvanceRead((count - 4) * sizeof(uint32_t));
+ 
++  static thread_local FramePacer frame_pacer;
++  frame_pacer.Wait(REXCVAR_GET(gpu_max_fps), [] { return FramePacer::Clock::now(); },
++                   [](auto duration) { rex::thread::Sleep(duration); });
+   IssueSwap(frontbuffer_ptr, frontbuffer_width, frontbuffer_height);
+ 
+   ++counter_;
+diff --git a/src/graphics/frame_pacer.h b/src/graphics/frame_pacer.h
+new file mode 100644
+--- /dev/null
++++ b/src/graphics/frame_pacer.h
+@@ -0,0 +1,37 @@
++// Host frame-swap pacing; independent of guest clocks and vblank frequency.
++#pragma once
++
++#include <chrono>
++#include <cstdint>
++
++namespace rex::graphics {
++
++class FramePacer {
++ public:
++  using Clock = std::chrono::steady_clock;
++
++  template <typename Now, typename Sleep>
++  void Wait(int32_t fps, Now now, Sleep sleep) {
++    auto current = now();
++    if (fps <= 0 || fps != fps_) {
++      fps_ = fps;
++      last_swap_ = current;
++      return;
++    }
++    const auto interval = std::chrono::ceil<Clock::duration>(
++        std::chrono::duration<double>(1.0 / fps));
++    const auto deadline = last_swap_ + interval;
++    while (current < deadline) {
++      sleep(std::chrono::ceil<std::chrono::microseconds>(deadline - current));
++      current = now();
++    }
++    // Late frames restart the schedule; never issue catch-up bursts.
++    last_swap_ = current;
++  }
++
++ private:
++  int32_t fps_ = 0;
++  Clock::time_point last_swap_{};
++};
++
++}  // namespace rex::graphics

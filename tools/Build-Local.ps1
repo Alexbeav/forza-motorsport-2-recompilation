@@ -77,9 +77,18 @@ Invoke-CheckedNative -FilePath $cmake -ArgumentList @(
     "-DCMAKE_CONFIGURATION_TYPES=Release",
     "-DCMAKE_INSTALL_PREFIX=$sdkInstall"
 ) -WorkingDirectory $sdkSource
-Invoke-CheckedNative -FilePath $cmake -ArgumentList @(
-    "--build", $sdkBuild, "--config", "Release", "--target", "install", "--parallel", $Jobs
-) -WorkingDirectory $sdkSource
+$sdkPatch = Join-Path $root "release/sdk-fps-cap.patch"
+Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", "--check", $sdkPatch) -WorkingDirectory $sdkSource
+Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", $sdkPatch) -WorkingDirectory $sdkSource
+try {
+    Invoke-CheckedNative -FilePath $cmake -ArgumentList @(
+        "--build", $sdkBuild, "--config", "Release", "--target", "install", "--parallel", $Jobs
+    ) -WorkingDirectory $sdkSource
+}
+finally {
+    # The SDK checkout stays pinned and clean; only its local build has the patch.
+    Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", "--reverse", $sdkPatch) -WorkingDirectory $sdkSource
+}
 
 $rexglue = Join-Path $sdkInstall "bin/rexglue.exe"
 if (-not (Test-Path -LiteralPath $rexglue -PathType Leaf)) {
@@ -162,6 +171,8 @@ $receipt = [ordered]@{
     source_files = $copiedRecords
     sdk_repository = $policy.sdk.repository
     sdk_commit = $sdkHead
+    sdk_patches = @([ordered]@{ path = "release/sdk-fps-cap.patch"; sha256 = (Get-FileHash -LiteralPath $sdkPatch).Hash })
+    features = @("gpu_max_fps")
     game_inputs = @($policy.required_game_inputs)
     artifacts = Get-Fm2FileRecords -Paths $artifacts -BasePath $buildRoot
 }
