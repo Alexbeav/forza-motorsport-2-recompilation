@@ -5,6 +5,7 @@ param(
     [string]$UserDataRoot,
     [string]$ContentRoot,
     [string]$SettingsPath,
+    [string]$LogoScreenshot,
     [string]$RenderPreview,
     [switch]$ValidateOnly
 )
@@ -29,8 +30,21 @@ Add-Type -AssemblyName PresentationFramework
 $reader = [Xml.XmlReader]::Create((Join-Path $PSScriptRoot 'Launcher.xaml'))
 try { $window = [Windows.Markup.XamlReader]::Load($reader) } finally { $reader.Dispose() }
 $controls = @{}
-foreach ($name in @('Surface','VSync','Fullscreen','Resolution','MaxFps','Scale','ScaleNote','ExecutablePath','GameDataRoot','UserDataRoot','ContentRoot','BrowseBuild','BrowseGame','BrowseUser','BrowseContent','Save','Start','Status')) {
+foreach ($name in @('Surface','HeaderArtwork','HeaderBrush','HeaderFallback','VSync','Fullscreen','Resolution','MaxFps','Scale','ScaleNote','ExecutablePath','GameDataRoot','UserDataRoot','ContentRoot','BrowseBuild','BrowseGame','BrowseUser','BrowseContent','Save','Start','Status')) {
     $controls[$name] = $window.FindName($name)
+}
+if (-not $LogoScreenshot) { $LogoScreenshot = Join-Path (Get-Fm2RepositoryRoot) '.local/launcher/fm2-logo-screenshot.png' }
+if (Test-Path -LiteralPath $LogoScreenshot -PathType Leaf) {
+    $bitmap = [Windows.Media.Imaging.BitmapImage]::new()
+    $bitmap.BeginInit()
+    $bitmap.CacheOption = [Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+    $bitmap.UriSource = [Uri]::new([IO.Path]::GetFullPath($LogoScreenshot))
+    $bitmap.EndInit()
+    $bitmap.Freeze()
+    # Display the main logo region; the supplied screenshot stays unmodified.
+    $controls.HeaderBrush.ImageSource = $bitmap
+    $controls.HeaderArtwork.Visibility = 'Visible'
+    $controls.HeaderFallback.Visibility = 'Collapsed'
 }
 foreach ($preset in @('1280 x 720', '1600 x 900', '1920 x 1080', '2560 x 1440', '3840 x 2160')) { [void]$controls.Resolution.Items.Add($preset) }
 foreach ($preset in @('Unlimited', '30', '60', '90', '120', '144', '165', '240')) { [void]$controls.MaxFps.Items.Add($preset) }

@@ -11,6 +11,9 @@ units; the running window used 150% DPI. A separate runtime patch adds explicit
 pixel dimensions, which the launcher now requires for windowed mode.
 Native checks retain 2560 x 1440 at 100%, 125%, 150% and 200% DPI. The rebuilt
 candidate still needs the owner to verify its actual game client area after restart.
+The owner subsequently confirmed that the corrected resolution is fine on
+2026-10-14. This accepts the window-size correction by owner observation;
+it does not establish a new race/FPS performance result.
 
 The graphical launcher and independent host FPS-cap patch passed settings,
 source-boundary, packaging and native pacing checks. The selected GPU plugin

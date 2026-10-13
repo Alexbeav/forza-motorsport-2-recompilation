@@ -36,24 +36,15 @@
   </Window.Resources>
   <Grid x:Name="Surface" Background="#101012">
     <Grid.RowDefinitions><RowDefinition Height="128"/><RowDefinition Height="*"/><RowDefinition Height="86"/></Grid.RowDefinitions>
-    <Border Grid.Row="0" BorderBrush="#F1A248" BorderThickness="0,0,0,2">
-      <Border.Background><LinearGradientBrush StartPoint="0,0.6" EndPoint="1,0.2"><GradientStop Color="#D1760F" Offset="0"/><GradientStop Color="#AB280A" Offset="0.55"/><GradientStop Color="#490D0C" Offset="1"/></LinearGradientBrush></Border.Background>
-      <Grid Margin="30,18">
-        <StackPanel VerticalAlignment="Center">
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="FORZA" FontSize="49" FontWeight="Black" FontStyle="Italic" Foreground="#EEEDE9"/>
-            <TextBlock Text="2" FontSize="56" FontWeight="Black" FontStyle="Italic" Foreground="#FFB144" Margin="8,-8,0,0"/>
-          </StackPanel>
-          <TextBlock Text="MOTORSPORT" FontSize="18" FontStyle="Italic" FontWeight="Bold" Foreground="#E2DED7"/>
-          <TextBlock Text="PC LAUNCHER" FontSize="10" Foreground="#FFD3A0" Margin="0,6,0,0"/>
-        </StackPanel>
-        <Viewbox Width="340" Height="80" HorizontalAlignment="Right" VerticalAlignment="Center" Opacity="0.7" IsHitTestVisible="False">
-          <Canvas Width="460" Height="108">
-            <Path Stroke="#FFD877" StrokeThickness="2.5" Data="M 2,76 C 34,57 52,48 92,47 L 132,44 C 177,8 210,10 261,14 L 331,33 362,39 C 401,39 431,48 451,62 L 460,80 M 6,87 C 95,91 284,88 456,86 M 145,43 L 306,41 M 47,64 L 91,59 M 347,55 L 431,57"/>
-            <Ellipse Width="56" Height="56" Stroke="#FFD877" StrokeThickness="2" Canvas.Left="72" Canvas.Top="50"/>
-            <Ellipse Width="56" Height="56" Stroke="#FFD877" StrokeThickness="2" Canvas.Left="348" Canvas.Top="50"/>
-          </Canvas>
-        </Viewbox>
+    <Border Grid.Row="0" BorderBrush="#CB6A1B" BorderThickness="0,0,0,2" Background="Black">
+      <Grid Margin="30,12">
+        <Border x:Name="HeaderArtwork" Visibility="Collapsed" Margin="0,0,0,8" IsHitTestVisible="False">
+          <Border.Background>
+            <ImageBrush x:Name="HeaderBrush" Stretch="Uniform" ViewboxUnits="RelativeToBoundingBox" Viewbox="0.146484375,0.381944444,0.693359375,0.264756944" RenderOptions.BitmapScalingMode="HighQuality"/>
+          </Border.Background>
+        </Border>
+        <TextBlock x:Name="HeaderFallback" Text="FORZA MOTORSPORT 2" FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#EAE7E0"/>
+        <TextBlock Text="PC LAUNCHER" FontSize="9" Foreground="#ADA79D" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
       </Grid>
     </Border>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
