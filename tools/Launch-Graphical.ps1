@@ -34,7 +34,7 @@ foreach ($name in @('Surface','VSync','Fullscreen','Resolution','MaxFps','Scale'
 }
 foreach ($preset in @('1280 x 720', '1600 x 900', '1920 x 1080', '2560 x 1440', '3840 x 2160')) { [void]$controls.Resolution.Items.Add($preset) }
 foreach ($preset in @('Unlimited', '30', '60', '90', '120', '144', '165', '240')) { [void]$controls.MaxFps.Items.Add($preset) }
-foreach ($preset in @('1x native · tested', '2x supersampling · experimental', '3x supersampling · experimental')) { [void]$controls.Scale.Items.Add($preset) }
+foreach ($preset in @('1x native · tested', '2x supersampling · buggy', '3x supersampling · untested')) { [void]$controls.Scale.Items.Add($preset) }
 $controls.VSync.IsChecked = $settings.VSync
 $controls.Fullscreen.IsChecked = $settings.Fullscreen
 $controls.Resolution.Text = "$($settings.Width) x $($settings.Height)"
@@ -60,7 +60,9 @@ function Read-Controls {
 function Update-ScaleNote {
     $controls.ScaleNote.Text = if ($controls.Scale.SelectedIndex -eq 0) {
         'Native internal resolution. Window size is a separate setting.'
-    } else { 'Experimental: 2x showed visual faults in earlier tests. Higher scales also increase GPU load.' }
+    } elseif ($controls.Scale.SelectedIndex -eq 1) {
+        'Buggy: wavy / distorted graphics confirmed at 2x. Use 1x for normal play.'
+    } else { 'Untested: 3x may also distort graphics. 2x has a confirmed wavy-graphics bug.' }
     $controls.ScaleNote.Foreground = if ($controls.Scale.SelectedIndex -eq 0) { '#A8A49C' } else { '#FFB35D' }
 }
 Update-ScaleNote

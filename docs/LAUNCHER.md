@@ -42,8 +42,9 @@ Window resolution excludes the title bar and borders. At 150% Windows scaling,
 2560 x 1440 still creates a 2560 x 1440 client area. Launcher text and controls
 continue to follow Windows scaling. Fullscreen uses the monitor's resolution.
 
-1x is the tested default. Higher render scales are experimental: an earlier
-2x test showed visual faults. The launcher does not fix those faults.
+1x is the tested default. 2x is buggy: the owner confirmed wavy/distorted
+graphics again on 2026-10-14. 3x is untested and may also distort graphics.
+The launcher labels each state and does not fix these faults.
 VSync and a lower FPS ceiling can both affect pacing; their combined behavior
 still needs an owner-run game comparison on the launcher build.
 

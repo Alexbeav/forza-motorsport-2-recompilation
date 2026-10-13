@@ -66,8 +66,8 @@ See [Marketplace content](docs/CONTENT.md#user-data-location) for `-UserDataRoot
 
 After building, open `Launch FM2 Settings.bat` for VSync, an independent FPS
 cap, window resolution, fullscreen and render scale. Select your existing
-profile folder to keep progress. Native 1x is the tested default; higher
-scales are experimental. See [FM2 launcher](docs/LAUNCHER.md) for controls,
+profile folder to keep progress. Native 1x is the tested default; 2x has known
+wavy graphics and 3x is untested. See [FM2 launcher](docs/LAUNCHER.md) for controls,
 build requirements and checks. The launcher is newer than the published
 `v0.1.0-alpha.1` archive.
 

@@ -2,6 +2,9 @@
 
 ## Launcher build — 2026-10-13
 
+The owner confirmed recurring wavy graphics at 2x internal scale on 2026-10-14.
+The launcher now marks 2x as buggy and 3x as untested. Native 1x remains the default.
+
 On 2026-10-14 the owner reported that the game window exceeded the selected
 resolution. The launcher passed 2560 x 1440 to SDK settings defined in logical
 units; the running window used 150% DPI. A separate runtime patch adds explicit
