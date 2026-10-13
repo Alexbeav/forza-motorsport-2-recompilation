@@ -77,17 +77,24 @@ Invoke-CheckedNative -FilePath $cmake -ArgumentList @(
     "-DCMAKE_CONFIGURATION_TYPES=Release",
     "-DCMAKE_INSTALL_PREFIX=$sdkInstall"
 ) -WorkingDirectory $sdkSource
-$sdkPatch = Join-Path $root "release/sdk-fps-cap.patch"
-Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", "--check", $sdkPatch) -WorkingDirectory $sdkSource
-Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", $sdkPatch) -WorkingDirectory $sdkSource
+$sdkPatches = @('release/sdk-fps-cap.patch', 'release/sdk-window-pixels.patch')
+$appliedPatches = [Collections.Generic.List[string]]::new()
 try {
+    foreach ($relativePatch in $sdkPatches) {
+        $patchPath = Join-Path $root $relativePatch
+        Invoke-CheckedNative -FilePath $git -ArgumentList @('apply', '--check', $patchPath) -WorkingDirectory $sdkSource
+        Invoke-CheckedNative -FilePath $git -ArgumentList @('apply', $patchPath) -WorkingDirectory $sdkSource
+        $appliedPatches.Add($patchPath)
+    }
     Invoke-CheckedNative -FilePath $cmake -ArgumentList @(
         "--build", $sdkBuild, "--config", "Release", "--target", "install", "--parallel", $Jobs
     ) -WorkingDirectory $sdkSource
 }
 finally {
     # The SDK checkout stays pinned and clean; only its local build has the patch.
-    Invoke-CheckedNative -FilePath $git -ArgumentList @("apply", "--reverse", $sdkPatch) -WorkingDirectory $sdkSource
+    for ($index = $appliedPatches.Count - 1; $index -ge 0; $index--) {
+        Invoke-CheckedNative -FilePath $git -ArgumentList @('apply', '--reverse', $appliedPatches[$index]) -WorkingDirectory $sdkSource
+    }
 }
 
 $rexglue = Join-Path $sdkInstall "bin/rexglue.exe"
@@ -171,8 +178,8 @@ $receipt = [ordered]@{
     source_files = $copiedRecords
     sdk_repository = $policy.sdk.repository
     sdk_commit = $sdkHead
-    sdk_patches = @([ordered]@{ path = "release/sdk-fps-cap.patch"; sha256 = (Get-FileHash -LiteralPath $sdkPatch).Hash })
-    features = @("gpu_max_fps")
+    sdk_patches = @($sdkPatches | ForEach-Object { [ordered]@{ path = $_; sha256 = (Get-FileHash -LiteralPath (Join-Path $root $_)).Hash } })
+    features = @('gpu_max_fps', 'window_size_in_pixels')
     game_inputs = @($policy.required_game_inputs)
     artifacts = Get-Fm2FileRecords -Paths $artifacts -BasePath $buildRoot
 }

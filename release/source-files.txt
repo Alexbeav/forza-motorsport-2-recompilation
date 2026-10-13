@@ -30,6 +30,7 @@ fm2/src/main.cpp
 release/release-policy.json
 release/source-files.txt
 release/sdk-fps-cap.patch
+release/sdk-window-pixels.patch
 rexheal.toml
 tools/Build-Local.ps1
 tools/New-SourceRelease.ps1

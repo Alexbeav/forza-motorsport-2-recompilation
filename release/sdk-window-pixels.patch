@@ -1,0 +1,69 @@
+diff --git a/src/ui/window_sdl.cpp b/src/ui/window_sdl.cpp
+index c37e550..6b61551 100644
+--- a/src/ui/window_sdl.cpp
++++ b/src/ui/window_sdl.cpp
+@@ -27,6 +27,8 @@
+ #include <rex/ui/flags.h>
+ #include <rex/ui/sdl_virtual_key.h>
+ 
++#include "window_size.h"
++
+ #if REX_PLATFORM_WIN32
+ #include <rex/ui/surface_win.h>
+ #else
+@@ -34,6 +36,10 @@
+ #include <rex/ui/surface_gnulinux.h>
+ #endif
+ 
++REXCVAR_DEFINE_BOOL(window_size_in_pixels, false, "UI/Window",
++                    "Use physical pixels for startup window width and height instead of DPI-scaled logical units")
++    .lifecycle(rex::cvar::Lifecycle::kRequiresRestart);
++
+ namespace rex::ui {
+ 
+ namespace {
+@@ -130,8 +136,10 @@ WindowSDL::~WindowSDL() {
+ bool WindowSDL::OpenImpl() {
+   // SDL window coordinates are physical pixels on Windows and X11.
+   SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_HIDDEN;
+-  sdl_window_ = SDL_CreateWindow(GetTitle().c_str(), int(SizeToPhysical(GetDesiredLogicalWidth())),
+-                                 int(SizeToPhysical(GetDesiredLogicalHeight())), flags);
++  const auto [width, height] = StartupWindowSize(
++      GetDesiredLogicalWidth(), GetDesiredLogicalHeight(), REXCVAR_GET(window_size_in_pixels),
++      [this](uint32_t size) { return SizeToPhysical(size); });
++  sdl_window_ = SDL_CreateWindow(GetTitle().c_str(), int(width), int(height), flags);
+   if (!sdl_window_) {
+     REXLOG_ERROR("SDL_CreateWindow failed: {}", SDL_GetError());
+     return false;
+@@ -171,6 +179,10 @@ bool WindowSDL::OpenImpl() {
+   int pixel_width = 0;
+   int pixel_height = 0;
+   SDL_GetWindowSizeInPixels(sdl_window_, &pixel_width, &pixel_height);
++  if (REXCVAR_GET(window_size_in_pixels) && !IsFullscreen()) {
++    OnDesiredLogicalSizeUpdate(SizeToLogical(uint32_t(pixel_width)),
++                               SizeToLogical(uint32_t(pixel_height)));
++  }
+   WindowDestructionReceiver destruction_receiver(this);
+   OnActualSizeUpdate(uint32_t(pixel_width), uint32_t(pixel_height), destruction_receiver);
+   if (destruction_receiver.IsWindowDestroyed()) {
+diff --git a/src/ui/window_size.h b/src/ui/window_size.h
+new file mode 100644
+--- /dev/null
++++ b/src/ui/window_size.h
+@@ -0,0 +1,16 @@
++#pragma once
++
++#include <cstdint>
++#include <utility>
++
++namespace rex::ui {
++
++// Keep the normal logical-size conversion, or bypass it for explicit pixel sizes.
++template <typename ToPhysical>
++std::pair<uint32_t, uint32_t> StartupWindowSize(uint32_t width, uint32_t height,
++                                               bool pixels, ToPhysical to_physical) {
++  if (pixels) return {width, height};
++  return {to_physical(width), to_physical(height)};
++}
++
++}  // namespace rex::ui

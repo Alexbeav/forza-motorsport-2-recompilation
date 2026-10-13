@@ -29,7 +29,7 @@ pwsh -NoProfile -STA -File .\tools\Launch-Graphical.ps1 `
 |---|---|---|
 | VSync | `vsync` | Existing SDK vertical-sync behavior |
 | Fullscreen | `fullscreen` | Fullscreen at monitor size, or a window |
-| Window resolution | `window_width`, `window_height` | Output window dimensions; does not change the guest video mode |
+| Window resolution | `window_width`, `window_height`, `window_size_in_pixels = true` | Exact client-area pixels, independent of Windows DPI; does not change the guest video mode |
 | Maximum FPS | `gpu_max_fps` | Host frame-swap ceiling, independent of VSync; 0 or Unlimited disables it |
 | Render scale | `draw_resolution_scale_x`, `draw_resolution_scale_y` | Internal rendering at 1x, 2x or 3x per axis |
 
@@ -37,6 +37,10 @@ The FPS field also accepts whole numbers through 1000. Resolution accepts
 `width x height`, from 640 x 480 through 8192 x 8192. The game can run below a
 chosen ceiling. The limiter does not unlock the engine's frame rate or change
 the guest refresh rate, game clock or physics settings.
+
+Window resolution excludes the title bar and borders. At 150% Windows scaling,
+2560 x 1440 still creates a 2560 x 1440 client area. Launcher text and controls
+continue to follow Windows scaling. Fullscreen uses the monitor's resolution.
 
 1x is the tested default. Higher render scales are experimental: an earlier
 2x test showed visual faults. The launcher does not fix those faults.
@@ -52,12 +56,15 @@ own trace setting. Validation does not write configuration or profile files.
 ## FPS-cap build and checks
 
 The public SDK pin remains the revision in `release/release-policy.json`.
-The local builder applies `release/sdk-fps-cap.patch` while building the GPU
-plugin, then reverses the patch to leave the SDK checkout clean. It records
-the patch hash and `gpu_max_fps` feature in `build-provenance.json`.
-The launcher checks that receipt against the actual GPU plugin hash before
-accepting a nonzero cap. An older build can use Unlimited and the other
-controls, but needs a rebuild for the new limiter.
+The local builder applies `release/sdk-fps-cap.patch` and
+`release/sdk-window-pixels.patch` while building the SDK, then reverses both
+patches to leave the checkout clean. It records their hashes and the
+`gpu_max_fps` / `window_size_in_pixels` features in `build-provenance.json`.
+The launcher checks those features against the actual GPU plugin and runtime
+hashes before accepting a nonzero cap or an exact window size. Older builds
+need a rebuild for these controls; Unlimited in fullscreen remains available.
+The SDK's default logical window sizing is unchanged when its pixel option
+is disabled. The Windows launcher enables that option.
 
 The patch paces Xbox swap packets with a host steady clock and the existing
 SDK sleep timer. It restarts the schedule after a late frame, retries early
@@ -77,12 +84,14 @@ pwsh -NoProfile -STA -File .\tools\Launch-Graphical.ps1 -RenderPreview "$env:TEM
 the game. `-RenderPreview` renders the actual controls to a PNG without
 showing a window. These checks do not prove in-game behavior.
 
-To check native pacing, apply the patch to the pinned SDK checkout and build
-its Release GPU plugin. Configure the host tests with `-G Ninja -DCMAKE_BUILD_TYPE=Release` and
+To check native pacing and DPI sizing, apply both patches to the pinned SDK
+checkout and build its Release runtime and GPU plugin. Configure the host tests with `-G Ninja -DCMAKE_BUILD_TYPE=Release` and
 `-DFPS_CAP_SDK_ROOT="D:/path/to/rexglue-sdk"`. The optional `frame_pacer_test`
-uses that patched header, GPU plugin and runtime. It checks deferred TOML
+uses the patched headers, GPU plugin and runtime. It checks deferred TOML
 loading, invalid caps, unchanged guest refresh, schedule reset and real timer
-pacing at 30, 60 and 120 swaps per second. Reverse the patch after the check.
+pacing at 30, 60 and 120 swaps per second. It also checks explicit pixel sizes
+at 100%, 125%, 150% and 200% DPI while retaining the old logical-size mode.
+Reverse both patches after the check.
 No game is started by this test.
 
 The previously published `v0.1.0-alpha.1` source archive and checksum are

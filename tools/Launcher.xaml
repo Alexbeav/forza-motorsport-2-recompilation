@@ -64,9 +64,9 @@
           <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
           <CheckBox x:Name="VSync" Grid.Column="0" Content="_VSync" AutomationProperties.Name="VSync" Margin="0,0,0,16" ToolTip="Use the SDK vertical-sync setting. The FPS cap remains separate."/>
           <CheckBox x:Name="Fullscreen" Grid.Column="2" Content="_Fullscreen" AutomationProperties.Name="Fullscreen" Margin="0,0,0,16" ToolTip="Fullscreen uses the monitor size. Resolution below sets the window size."/>
-          <StackPanel Grid.Row="1" Grid.Column="0"><Label Target="{Binding ElementName=Resolution}" Content="_Window resolution" Foreground="#C7C4BD" Padding="0,0,0,6"/><ComboBox x:Name="Resolution" IsEditable="True" AutomationProperties.Name="Window resolution"/></StackPanel>
+          <StackPanel Grid.Row="1" Grid.Column="0"><Label Target="{Binding ElementName=Resolution}" Content="_Window resolution (pixels)" Foreground="#C7C4BD" Padding="0,0,0,6"/><ComboBox x:Name="Resolution" IsEditable="True" AutomationProperties.Name="Window resolution in physical pixels"/></StackPanel>
           <StackPanel Grid.Row="1" Grid.Column="2"><Label Target="{Binding ElementName=MaxFps}" Content="Ma_ximum FPS" Foreground="#C7C4BD" Padding="0,0,0,6"/><ComboBox x:Name="MaxFps" IsEditable="True" AutomationProperties.Name="Maximum FPS"/></StackPanel>
-          <TextBlock Grid.Row="2" Grid.Column="0" Text="Fullscreen uses your monitor's resolution." Foreground="#A8A49C" FontSize="11" Margin="0,6,0,12"/>
+          <TextBlock Grid.Row="2" Grid.Column="0" Text="Exact client pixels. Windows DPI does not enlarge this size." Foreground="#A8A49C" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,12"/>
           <TextBlock Grid.Row="2" Grid.Column="2" Text="A ceiling, independent of VSync. Does not unlock game FPS." Foreground="#A8A49C" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,12"/>
         </Grid>
         <Label Target="{Binding ElementName=Scale}" Content="Render _scale / supersampling" Foreground="#C7C4BD" Padding="0,0,0,6"/>

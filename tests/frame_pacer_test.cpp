@@ -1,4 +1,5 @@
 #include "frame_pacer.h"
+#include "window_size.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -25,7 +26,8 @@ int main(int argc, char** argv) {
 #ifdef _WIN32
   rex::cvar::Init(argc, argv);
   const auto guest_refresh = rex::cvar::GetFlagByName("video_mode_refresh_rate");
-  std::ofstream("frame-pacer-config.toml") << "gpu_max_fps = 37\n";
+  Check(rex::cvar::GetFlagByName("window_size_in_pixels") == "false");
+  std::ofstream("frame-pacer-config.toml") << "gpu_max_fps = 37\nwindow_size_in_pixels = true\n";
   rex::cvar::LoadConfig("frame-pacer-config.toml");
   Check(LoadLibraryW(L"rexgpu-xenos.dll") != nullptr);
   std::cout << "Loaded cap: " << rex::cvar::GetFlagByName("gpu_max_fps") << '\n';
@@ -33,8 +35,21 @@ int main(int argc, char** argv) {
   Check(!rex::cvar::SetFlagByName("gpu_max_fps", "1001"));
   Check(rex::cvar::SetFlagByName("gpu_max_fps", "0"));
   Check(rex::cvar::GetFlagByName("video_mode_refresh_rate") == guest_refresh);
+  Check(rex::cvar::GetFlagByName("window_size_in_pixels") == "true");
   std::cout << "GPU plugin consumed deferred TOML cap; guest refresh unchanged.\n";
 #endif
+  for (uint32_t dpi : {96, 120, 144, 192}) {
+    int conversions = 0;
+    auto to_physical = [&](uint32_t size) {
+      ++conversions;
+      return uint32_t((uint64_t(size) * dpi + 95) / 96);
+    };
+    const auto pixels = rex::ui::StartupWindowSize(2560, 1440, true, to_physical);
+    Check(pixels.first == 2560 && pixels.second == 1440 && conversions == 0);
+    const auto legacy = rex::ui::StartupWindowSize(2560, 1440, false, to_physical);
+    Check(legacy.first == 2560 * dpi / 96 && legacy.second == 1440 * dpi / 96 && conversions == 2);
+  }
+  std::cout << "Physical window size stays 2560x1440 at 100/125/150/200% DPI.\n";
   FramePacer pacer;
   FramePacer::Clock::time_point tick{};
   int sleeps = 0;

@@ -74,6 +74,7 @@ function New-Fm2LauncherPlan([System.Collections.IDictionary]$Settings) {
     $buildRoot = Split-Path -Parent $executable
     $receiptPath = Join-Path $buildRoot 'build-provenance.json'
     $supportsCap = $false
+    $supportsPixels = $false
     if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
         $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json -AsHashtable
         if ($receipt.ContainsKey('features') -and $receipt.features -contains 'gpu_max_fps') {
@@ -82,9 +83,18 @@ function New-Fm2LauncherPlan([System.Collections.IDictionary]$Settings) {
             $supportsCap = $gpu.Count -eq 1 -and (Test-Path -LiteralPath $pluginPath -PathType Leaf) -and
                 (Get-FileHash -LiteralPath $pluginPath).Hash -eq $gpu[0].sha256
         }
+        if ($receipt.ContainsKey('features') -and $receipt.features -contains 'window_size_in_pixels') {
+            $runtime = @($receipt.artifacts | Where-Object path -EQ 'rexruntime.dll')
+            $runtimePath = Join-Path $buildRoot 'rexruntime.dll'
+            $supportsPixels = $runtime.Count -eq 1 -and (Test-Path -LiteralPath $runtimePath -PathType Leaf) -and
+                (Get-FileHash -LiteralPath $runtimePath).Hash -eq $runtime[0].sha256
+        }
     }
     if ($Settings.MaxFps -ne 0 -and -not $supportsCap) {
         throw 'This build has no verified FPS limiter. Rebuild with the launcher sources, or choose Unlimited.'
+    }
+    if (-not $Settings.Fullscreen -and -not $supportsPixels) {
+        throw 'This build scales window dimensions with Windows DPI. Rebuild with the launcher sources for exact pixel resolution.'
     }
     $gameRoot = Assert-Fm2GameInputs -GameDataRoot $Settings.GameDataRoot
     $userRoot = [IO.Path]::GetFullPath($Settings.UserDataRoot)
@@ -119,6 +129,7 @@ function New-Fm2LauncherPlan([System.Collections.IDictionary]$Settings) {
         # Do not retain a stale cap from a different GPU plugin.
         $template = [regex]::Replace($template, '(?m)^\s*gpu_max_fps\s*=.*(?:\r?\n|$)', '')
     }
+    if ($supportsPixels) { $values.window_size_in_pixels = $true }
     return [pscustomobject]@{
         Executable = $executable
         WorkingDirectory = $buildRoot
@@ -127,6 +138,7 @@ function New-Fm2LauncherPlan([System.Collections.IDictionary]$Settings) {
         ConfigPath = $configPath
         RuntimeConfiguration = Merge-Fm2RuntimeConfiguration $template $values
         SupportsFpsCap = $supportsCap
+        SupportsPixelResolution = $supportsPixels
     }
 }
 

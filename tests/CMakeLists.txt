@@ -7,13 +7,13 @@ add_executable(content_status_test content_status_test.cpp)
 target_include_directories(content_status_test PRIVATE ../fm2/src)
 add_test(NAME content_status COMMAND content_status_test)
 
-# Point at an SDK tree with release/sdk-fps-cap.patch applied.
+# Point at an SDK tree with both release/sdk-*.patch files applied.
 if(FPS_CAP_SDK_ROOT)
     if(WIN32 AND NOT CMAKE_BUILD_TYPE STREQUAL "Release")
         message(FATAL_ERROR "The FPS-cap fixture links a Release SDK. Configure with -G Ninja -DCMAKE_BUILD_TYPE=Release.")
     endif()
     add_executable(frame_pacer_test frame_pacer_test.cpp)
-    target_include_directories(frame_pacer_test PRIVATE "${FPS_CAP_SDK_ROOT}/src/graphics" "${FPS_CAP_SDK_ROOT}/include")
+    target_include_directories(frame_pacer_test PRIVATE "${FPS_CAP_SDK_ROOT}/src/graphics" "${FPS_CAP_SDK_ROOT}/src/ui" "${FPS_CAP_SDK_ROOT}/include")
     if(WIN32)
         target_link_libraries(frame_pacer_test PRIVATE "${FPS_CAP_SDK_ROOT}/out/win-amd64/Release/rexruntime.lib")
         add_custom_command(TARGET frame_pacer_test POST_BUILD

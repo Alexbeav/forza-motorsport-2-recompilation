@@ -2,6 +2,13 @@
 
 ## Launcher build — 2026-10-13
 
+On 2026-10-14 the owner reported that the game window exceeded the selected
+resolution. The launcher passed 2560 x 1440 to SDK settings defined in logical
+units; the running window used 150% DPI. A separate runtime patch adds explicit
+pixel dimensions, which the launcher now requires for windowed mode.
+Native checks retain 2560 x 1440 at 100%, 125%, 150% and 200% DPI. The rebuilt
+candidate still needs the owner to verify its actual game client area after restart.
+
 The graphical launcher and independent host FPS-cap patch passed settings,
 source-boundary, packaging and native pacing checks. The selected GPU plugin
 consumed its cap from TOML without changing the guest refresh setting.

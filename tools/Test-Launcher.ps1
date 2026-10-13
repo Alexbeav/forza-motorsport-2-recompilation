@@ -34,7 +34,9 @@ $settings.ContentRoot = $settings.GameDataRoot
 [IO.File]::WriteAllText($settings.ExecutablePath, 'Non-executable fixture. Never launched.')
 $plugin = Join-Path $fixture 'build with spaces/rexgpu-xenos.dll'
 [IO.File]::WriteAllText($plugin, 'Non-executable plugin fixture.')
-$receipt = @{ features = @('gpu_max_fps'); artifacts = @(@{ path = 'rexgpu-xenos.dll'; sha256 = (Get-FileHash -LiteralPath $plugin).Hash }) }
+$runtime = Join-Path $fixture 'build with spaces/rexruntime.dll'
+[IO.File]::WriteAllText($runtime, 'Non-executable runtime fixture.')
+$receipt = @{ features = @('gpu_max_fps', 'window_size_in_pixels'); artifacts = @(@{ path = 'rexgpu-xenos.dll'; sha256 = (Get-FileHash -LiteralPath $plugin).Hash }, @{ path = 'rexruntime.dll'; sha256 = (Get-FileHash -LiteralPath $runtime).Hash }) }
 $receiptPath = Join-Path $fixture 'build with spaces/build-provenance.json'
 [IO.File]::WriteAllText($receiptPath, ($receipt | ConvertTo-Json -Depth 4))
 $config = Join-Path $fixture 'build with spaces/fm2.toml'
@@ -56,6 +58,7 @@ foreach ($cap in @(0, 30, 60, 120, 1000)) {
 }
 Assert ($plan.RuntimeConfiguration -match '(?m)^vsync = false$' -and [regex]::Matches($plan.RuntimeConfiguration, '(?m)^\s*vsync\s*=').Count -eq 1) 'Duplicate managed keys remained.'
 Assert ($plan.RuntimeConfiguration.Contains('readback_resolve_mode = "fast"') -and $plan.RuntimeConfiguration.Contains('# keep this comment') -and $plan.RuntimeConfiguration.Contains('fm2_content_trace = true')) 'Unrelated settings were lost.'
+Assert ($plan.SupportsPixelResolution -and $plan.RuntimeConfiguration -match '(?m)^window_size_in_pixels = true$') 'Pixel resolution mode was not enabled.'
 Assert ($plan.Arguments -contains "--game_data_root=$($settings.GameDataRoot)" -and $plan.Arguments -contains "--user_data_root=$($settings.UserDataRoot)" -and $plan.Arguments -contains "--fm2_content_root=$($settings.ContentRoot)") 'Paths with spaces were split.'
 Assert (-not (Test-Path -LiteralPath $loaded.UserDataRoot) -and [IO.File]::ReadAllText($config) -ceq $sentinel) 'Validation wrote game configuration or profile data.'
 [IO.File]::AppendAllText($plugin, 'changed')
@@ -65,6 +68,10 @@ $loaded.MaxFps = 0
 $old = New-Fm2LauncherPlan $loaded
 Assert (-not $old.SupportsFpsCap -and $old.RuntimeConfiguration -notmatch 'gpu_max_fps') 'An old runtime claimed FPS support.'
 [IO.File]::WriteAllText($config, $sentinel)
+[IO.File]::AppendAllText($runtime, 'changed')
+$loaded.Fullscreen = $false
+Reject { New-Fm2LauncherPlan $loaded } 'This build scales window dimensions*'
+$loaded.Fullscreen = $true
 $loaded.Width = 1
 Reject { New-Fm2LauncherPlan $loaded } 'Window resolution*'
 $loaded.Width = 1280; $loaded.MaxFps = 1001
